@@ -2,9 +2,10 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import {getFirestore} from 'firebase/firestore'
+import { apiKey } from "./api_key";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCZ7NXxo2NmrZX34QjeuGw2UWZ9ZbpvKnI",
+  apiKey: apiKey,
   authDomain: "house-market-place-c1739.firebaseapp.com",
   projectId: "house-market-place-c1739",
   storageBucket: "house-market-place-c1739.appspot.com",
