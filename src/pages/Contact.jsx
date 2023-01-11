@@ -11,20 +11,21 @@ export const Contact = () => {
 
     const params = useParams()
 
-    useEffect(()=>{
-        const getLandLord = async () => {
-            const docRef = doc(db, 'users', params.landlordId)
-            const  docSnap = await getDoc(docRef)
-
-            if(docSnap.exists()){
-                setLandlord(docSnap.data())
-            }else{
-                toast.error('Could not get landlord data')
-            }
+    useEffect(() => {
+        const getLandlord = async () => {
+            console.log('xxx',params.landlordId);
+          const docRef = doc(db, 'users', params.landlordId)
+          const docSnap = await getDoc(docRef)
+    
+          if (docSnap.exists()) {
+            setLandlord(docSnap.data())
+          } else {
+            toast.error('Could not get landlord data')
+          }
         }
-
-        getLandLord();
-    },[]);
+    
+        getLandlord()
+      }, [params.landlordId])
 
     const onChange = (e) => {
         setMessage(e.target.value)
@@ -62,9 +63,9 @@ export const Contact = () => {
                         ${searchParams.get('listingName')}&body=
                         ${message}`}
                     >
-                        <button type='button' className="primaryButton">
-                            Send Message
-                        </button>
+                    <button type='button' className='primaryButton'>
+                        Send Message
+                    </button>
                     </a>
                 </form>
             </main>

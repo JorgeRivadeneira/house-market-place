@@ -6,6 +6,11 @@ import { db } from '../firebase/firebase.config'
 import { Spinner } from '../components/Spinner'
 import shareIcon from '../assets/svg/shareIcon.svg'
 import { list } from 'firebase/storage'
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import SwiperCore, {Navigation, Pagination, Scrollbar, A11y} from 'swiper'
+import {Swiper, SwiperSlide} from 'swiper/react'
+import 'swiper/css'
+SwiperCore.use([Navigation, Pagination, Scrollbar, A11y])
 
 export const Listing = () => {
 
@@ -38,7 +43,21 @@ export const Listing = () => {
 
   return (
     <main >
-        {/** MAP */}
+        
+        <Swiper slidesPerView={1} pagination={{clickable: true}}>
+            {listings.imgUrls.map((url, index) => (
+                <SwiperSlide key={index}>
+                    <div style={{background: `url(${listings.imgUrls[index]}) center no-repeat`,
+                    backgroundSize: 'cover'}}
+                        className='swiperSlideSwip'>
+
+                        
+                    </div>
+                </SwiperSlide>
+            ))}
+
+        </Swiper>
+
         <div className='shareIconDiv' onClick={()=>{
             navigator.clipboard.writeText(window.location.href);
             setShareLinkCopied(true);
@@ -68,7 +87,7 @@ export const Listing = () => {
             {listings?.offer && (
                 <p className="discountPrice">
                     ${listings?.regularPrice - listings?.discountedPrice}
-                    discount
+                     discount
                 </p>
             )}
 
@@ -87,11 +106,30 @@ export const Listing = () => {
                 <li>{listings?.furnished && 'Furnished'}</li>   
             </ul>
             <p className="listingLocationTitle">Location</p>
-            {/**MAP */}
+            
+            <div className='leafletContainer'>
+            <MapContainer
+                style={{ height: '100%', width: '100%' }}
+                center={[listings.geolocation.lat, listings.geolocation.lng]}
+                zoom={13}
+                scrollWheelZoom={false}
+            >
+                <TileLayer
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                url='https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png'
+                />
+
+                <Marker
+                position={[listings.geolocation.lat, listings.geolocation.lng]}
+                >
+                <Popup>{listings.location}</Popup>
+                </Marker>
+            </MapContainer>
+            </div>
 
             {auth.currentUser?.uid !== listings?.userRef && (
                 <Link 
-                    to={`/contact/${listings?.userRef}?listingName=${listings?.name}`}
+                    to={`/contact/${listings?.useRef}?listingName=${listings?.name}`}
                     className='primaryButton'
                     >
                     Contact landlord
@@ -102,3 +140,6 @@ export const Listing = () => {
     </main>
   )
 }
+
+
+// https://stackoverflow.com/questions/67552020/how-to-fix-error-failed-to-compile-node-modules-react-leaflet-core-esm-pat
